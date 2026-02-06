@@ -9,7 +9,923 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="src/style.css">
+    <style>
+        :root {
+            --primary-color: #b45309;
+            /* Saffron/Ochre */
+            --accent-color: #f59e0b;
+            /* Golden Yellow */
+            --buddhist-color: #92400e;
+            /* Deep Monk Robe */
+            --comp-color: #16a34a;
+            --glass-bg: rgba(255, 255, 255, 0.98);
+            --glass-border: rgba(251, 191, 36, 0.3);
+
+            --day-sun: #dc2626;
+            --day-mon: #d97706;
+            --day-tue: #db2777;
+            --day-wed: #059669;
+            --day-thu: #ea580c;
+            --day-fri: #2563eb;
+            --day-sat: #7c3aed;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #fffbeb;
+            color: #451a03;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .background-blobs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        .blob-1 {
+            width: 600px;
+            height: 600px;
+            background: #fef3c7;
+            top: -150px;
+            left: -150px;
+        }
+
+        .blob-2 {
+            width: 500px;
+            height: 500px;
+            background: #ffedd5;
+            bottom: -100px;
+            right: -100px;
+        }
+
+        .glass-container {
+            background: var(--glass-bg);
+            border-radius: 32px;
+            width: 100%;
+            max-width: 1000px;
+            padding: 40px 50px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+            gap: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+            flex-wrap: wrap;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-circle {
+            width: 120px;
+            height: 120px;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .brand-text h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #1e3a8a;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+
+        .brand-text p {
+            color: #64748b;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .nav-controls-area {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 15px;
+        }
+
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: #ffffff;
+            padding: 8px 16px;
+            border-radius: 100px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        .date-context {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 180px;
+            text-align: center;
+        }
+
+        #monthDisplay {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #92400e;
+            margin-bottom: 4px;
+            line-height: 1;
+        }
+
+        #yearDisplay {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #b45309;
+            background: #fef3c7;
+            padding: 2px 12px;
+            border-radius: 20px;
+        }
+
+        .nav-btn {
+            background: white;
+            border: 1.5px solid #fde68a;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s ease;
+            color: #92400e;
+        }
+
+        .nav-btn:hover {
+            background: #b45309;
+            color: white;
+            border-color: #b45309;
+            transform: scale(1.05);
+        }
+
+        .nav-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .action-btn-outline {
+            background: white;
+            border: 1.5px solid #e2e8f0;
+            padding: 8px 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .action-btn-outline:hover {
+            border-color: #1e3a8a;
+            color: #1e3a8a;
+            background: #eff6ff;
+        }
+
+        .action-btn-outline.highlight {
+            background: #1e3a8a;
+            color: white;
+            border-color: #1e3a8a;
+        }
+
+        .action-btn-outline.highlight:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+        }
+
+        .calendar-card {
+            margin-bottom: 40px;
+        }
+
+        .weekdays-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .weekdays-grid div {
+            font-weight: 800;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: #94a3b8;
+            padding-bottom: 10px;
+        }
+
+        .weekdays-grid .sun {
+            color: var(--day-sun);
+        }
+
+        .weekdays-grid .mon {
+            color: var(--day-mon);
+        }
+
+        .weekdays-grid .tue {
+            color: var(--day-tue);
+        }
+
+        .weekdays-grid .wed {
+            color: var(--day-wed);
+        }
+
+        .weekdays-grid .thu {
+            color: var(--day-thu);
+        }
+
+        .weekdays-grid .fri {
+            color: var(--day-fri);
+        }
+
+        .weekdays-grid .sat {
+            color: var(--day-sat);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 12px;
+        }
+
+        .day {
+            min-height: 100px;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 8px 10px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1.5px solid #f1f5f9;
+        }
+
+        .day:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            border-color: #cbd5e1;
+            z-index: 2;
+        }
+
+        .day.empty {
+            background: transparent;
+            border: none;
+            cursor: default;
+        }
+
+        .day.empty:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .day-number {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .day.sunday .day-number {
+            color: var(--day-sun);
+        }
+
+        .day.saturday {
+            background: #fdf4ff;
+        }
+
+        .day.sunday {
+            background: #fff1f2;
+        }
+
+        .day.today {
+            background: #eff6ff;
+            border: 2px solid #2563eb;
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.15);
+        }
+
+        .day.today .day-number {
+            color: #2563eb;
+        }
+
+        .event-name {
+            font-size: 0.7rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-top: auto;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2px 3px;
+            border-radius: 4px;
+            width: 100%;
+            word-break: break-word;
+        }
+
+        .day.holiday {
+            background: #fee2e2;
+            border-top: 4px solid var(--primary-color);
+        }
+
+        .day.holiday .day-number,
+        .day.holiday .event-name {
+            color: var(--primary-color);
+        }
+
+        .day.buddhist {
+            border-top: 4px solid var(--buddhist-color);
+        }
+
+        .day.buddhist .event-name {
+            color: var(--buddhist-color);
+        }
+
+        .day.exam {
+            border-top: 4px solid var(--accent-color);
+        }
+
+        .day.exam .event-name {
+            color: #854d0e;
+        }
+
+        .day.compensation {
+            border-top: 4px solid var(--comp-color);
+        }
+
+        .day.compensation .day-number,
+        .day.compensation .event-name {
+            color: var(--comp-color);
+        }
+
+        .legend-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 20px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #f1f5f9;
+            justify-content: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot.holiday {
+            background: var(--primary-color);
+        }
+
+        .dot.buddhist {
+            background: var(--buddhist-color);
+        }
+
+        .dot.exam {
+            background: var(--accent-color);
+        }
+
+        .dot.compensation {
+            background: var(--comp-color);
+        }
+
+        .dot.today {
+            background: #2563eb;
+        }
+
+        .holiday-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .holiday-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 24px;
+            background: #ffffff;
+            border-radius: 18px;
+            border-left: 8px solid #e2e8f0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            border: 1px solid #f1f5f9;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .holiday-item:hover {
+            transform: translateX(8px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+        }
+
+        .holiday-date-badge {
+            min-width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            border-radius: 14px;
+            margin-right: 20px;
+            font-weight: 800;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .holiday-info strong {
+            font-size: 1.1rem;
+            color: #0f172a;
+            line-height: 1.4;
+        }
+
+        .date-holiday {
+            background: var(--primary-color);
+        }
+
+        .date-buddhist {
+            background: var(--buddhist-color);
+        }
+
+        .date-exam {
+            background: var(--accent-color);
+            color: #854d0e;
+        }
+
+        .date-compensation {
+            background: var(--comp-color);
+        }
+
+        .border-holiday {
+            border-left-color: var(--primary-color) !important;
+        }
+
+        .border-buddhist {
+            border-left-color: var(--buddhist-color) !important;
+        }
+
+        .border-exam {
+            border-left-color: var(--accent-color) !important;
+        }
+
+        .border-compensation {
+            border-left-color: var(--comp-color) !important;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .glass-card {
+            background: white;
+            padding: 30px;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #9ca3af;
+        }
+
+        .modal-date-text {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-date-text::before {
+            content: '📅';
+        }
+
+        .modal-desc-box {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            color: #475569;
+            min-height: 100px;
+            border: 1px solid #f1f5f9;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            background: #f8fafc;
+        }
+
+        .summary-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .summary-card {
+            background: white;
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            border-radius: 24px;
+            padding: 30px !important;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .summary-layout {
+            display: flex;
+            gap: 30px;
+            margin-top: 25px;
+        }
+
+        .summary-tabs {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 200px;
+        }
+
+        .s-tab {
+            padding: 12px 20px;
+            border: none;
+            background: #fdf2f2;
+            border-radius: 12px;
+            text-align: left;
+            font-weight: 700;
+            color: #92400e;
+            cursor: pointer;
+        }
+
+        .s-tab.active {
+            background: #b45309;
+            color: white;
+        }
+
+        .summary-content {
+            flex: 1;
+        }
+
+        .summary-pane {
+            display: none;
+        }
+
+        .summary-pane.active {
+            display: block;
+        }
+
+        .summary-pane ul {
+            list-style: none;
+        }
+
+        .summary-pane li {
+            background: #fffbeb;
+            padding: 15px;
+            border-radius: 14px;
+            margin-bottom: 12px;
+            border: 1px solid #fef3c7;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .summary-pane li strong {
+            color: #451a03;
+        }
+
+        .summary-month-header {
+            grid-column: 1 / -1;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #1e3a8a;
+            padding: 24px 0 10px 10px;
+            margin-top: 5px;
+            border-bottom: 2px solid #eff6ff;
+            display: flex;
+            align-items: center;
+        }
+
+        .summary-month-header::before {
+            content: '';
+            width: 6px;
+            height: 1.2rem;
+            background: #1e3a8a;
+            margin-right: 12px;
+            border-radius: 4px;
+        }
+
+        .auth-card {
+            max-width: 400px !important;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #fef3c7;
+        }
+
+        .auth-tab {
+            background: none;
+            border: none;
+            padding: 8px 0;
+            font-weight: 700;
+            color: #92400e;
+            cursor: pointer;
+            opacity: 0.6;
+        }
+
+        .auth-tab.active {
+            opacity: 1;
+            position: relative;
+        }
+
+        .auth-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #b45309;
+            border-radius: 2px;
+        }
+
+        .event-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .save-btn {
+            flex: 1;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .cancel-btn {
+            flex: 1;
+            background: #fdf2f2;
+            color: #92400e;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .add-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .admin-only {
+            display: none !important;
+        }
+
+        body.admin-mode .admin-only {
+            display: flex !important;
+        }
+
+        body.admin-mode button.admin-only {
+            display: inline-block !important;
+        }
+
+        @media (max-width: 900px) {
+            .glass-container {
+                padding: 25px 15px;
+            }
+
+            .app-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .nav-controls-area {
+                align-items: center;
+                width: 100%;
+            }
+
+            .calendar-nav {
+                width: 100%;
+                max-width: 400px;
+                justify-content: space-between;
+            }
+
+            #monthDisplay {
+                font-size: 1.8rem;
+            }
+
+            .calendar-grid {
+                gap: 6px;
+            }
+
+            .day {
+                min-height: 80px;
+            }
+
+            .event-name {
+                font-size: 0.6rem;
+                -webkit-line-clamp: 2;
+                line-clamp: 2;
+            }
+
+            .summary-layout {
+                flex-direction: column;
+            }
+
+            .summary-tabs {
+                flex-direction: row;
+                overflow-x: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .quick-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .action-btn-outline {
+                width: 100%;
+                text-align: center;
+            }
+
+            .event-name {
+                display: none !important;
+            }
+
+            .day {
+                min-height: 55px;
+            }
+
+            .day::after {
+                content: '';
+                display: block;
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                margin: 2px auto 0;
+            }
+
+            .day.holiday::after {
+                background: var(--primary-color);
+            }
+
+            .day.buddhist::after {
+                background: var(--buddhist-color);
+            }
+
+            .day.exam::after {
+                background: var(--accent-color);
+            }
+
+            .day.compensation::after {
+                background: var(--comp-color);
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -18,11 +934,10 @@
         <div class="blob blob-2"></div>
     </div>
 
-    <main class="glass-container fade-in">
+    <main class="glass-container">
         <header class="app-header">
             <div class="logo-area">
                 <div class="logo-circle">
-                    <!-- SVG Logo Container -->
                     <svg viewBox="0 0 100 100" width="100" height="100">
                         <circle cx="50" cy="50" r="45" fill="#1e3a8a" />
                         <path d="M30 70 L50 30 L70 70 Z" fill="white" />
@@ -36,60 +951,40 @@
             </div>
             <div class="nav-controls-area">
                 <nav class="calendar-nav">
-                    <button id="prevBtn" class="nav-btn" title="เดือนก่อนหน้า">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <polyline points="15 18 9 12 15 6"></polyline>
-                        </svg>
-                    </button>
+                    <button id="prevBtn" class="nav-btn">&larr;</button>
                     <div class="date-context">
                         <span id="monthDisplay"></span>
                         <span id="yearDisplay"></span>
                     </div>
-                    <button id="nextBtn" class="nav-btn" title="เดือนถัดไป">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </button>
+                    <button id="nextBtn" class="nav-btn">&rarr;</button>
                 </nav>
                 <div class="quick-actions">
                     <button id="todayBtn" class="action-btn-outline">วันนี้</button>
                     <button id="summaryBtn" class="action-btn-outline highlight">สรุปปีนี้</button>
-                    <button id="exportBtn" class="action-btn-outline admin-only"
-                        title="ส่งออกข้อมูลสำหรับเครื่องสแกนหน้า">ส่งออกข้อมูล (CSV)</button>
+                    <button id="exportBtn" class="action-btn-outline admin-only">ส่งออกข้อมูล (CSV)</button>
                     <button id="loginBtn" class="action-btn-outline">เข้าสู่ระบบเจ้าหน้าที่</button>
                 </div>
             </div>
         </header>
 
-        <!-- Summary Section (Initially Hidden) -->
         <section id="summarySection" class="summary-section hidden">
-            <div class="summary-card glass-container">
-                <div class="section-header">
-                    <div class="title-with-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2.5">
-                            <path
-                                d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z" />
-                        </svg>
-                        <div class="summary-title-wrapper">
-                            <h3>สรุปกิจกรรมประจำปี</h3>
-                            <div class="summary-year-nav">
-                                <button id="summaryPrevYear" class="year-nav-btn">&larr;</button>
-                                <span id="summaryYear"></span>
-                                <button id="summaryNextYear" class="year-nav-btn">&rarr;</button>
-                            </div>
-                        </div>
+            <div class="summary-card">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h3>สรุปกิจกรรมประจำปี <span id="summaryYear"></span></h3>
+                    <div class="summary-year-nav" style="display:inline-flex; align-items:center; gap:10px;">
+                        <button id="summaryPrevYear" class="year-nav-btn">&larr;</button>
+                        <button id="summaryNextYear" class="year-nav-btn">&rarr;</button>
+                        <button id="closeSummary" class="close-btn"
+                            style="font-size:2rem; cursor:pointer; background:none; border:none; color:#9ca3af; margin-left:15px;">&times;</button>
                     </div>
-                    <button id="closeSummary" class="close-icon">&times;</button>
                 </div>
-
                 <div class="summary-layout">
                     <div class="summary-tabs">
                         <button class="s-tab active" data-target="public-group">วันหยุดราชการ</button>
                         <button class="s-tab" data-target="comp-group">วันทำงานชดเชย</button>
                         <button class="s-tab" data-target="other-group">กิจกรรมอื่น ๆ</button>
                     </div>
-
-                    <div id="summaryContent" class="summary-content">
+                    <div class="summary-content">
                         <div class="summary-pane active" id="public-group">
                             <ul id="publicHolidaySummary"></ul>
                         </div>
@@ -115,18 +1010,17 @@
                 <div class="sat">เสาร์</div>
             </div>
             <div id="calendarGrid" class="calendar-grid"></div>
-
             <div class="legend-area">
                 <div class="legend-item"><span class="dot holiday"></span> วันหยุดราชการ</div>
                 <div class="legend-item"><span class="dot buddhist"></span> วันพระ / วันสำคัญ</div>
                 <div class="legend-item"><span class="dot exam"></span> วันกิจกรรม / สอบ</div>
-                <div class="legend-item"><span class="dot compensation"></span> วันชดเชย</div>
+                <div class="legend-item"><span class="dot compensation"></span> วันทำงานชดเชย</div>
                 <div class="legend-item"><span class="dot today"></span> วันนี้</div>
             </div>
         </section>
 
-        <section class="events-section">
-            <div class="section-header">
+        <section class="events-section" style="margin-top:30px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
                 <h3>รายการกิจกรรมเดือนนี้</h3>
                 <button id="addEventBtn" class="add-btn admin-only">+ เพิ่มกิจกรรม</button>
             </div>
@@ -134,7 +1028,6 @@
         </section>
     </main>
 
-    <!-- Modal for details/Editing -->
     <div id="eventModal" class="modal hidden">
         <div class="glass-card">
             <div class="modal-header">
@@ -142,38 +1035,28 @@
                 <span class="close-btn" id="closeModal">&times;</span>
             </div>
             <div id="viewMode">
-                <div class="modal-body">
-                    <p id="modalDate" class="modal-date-text"></p>
-                    <div id="modalDescription" class="modal-desc-box"></div>
-                </div>
+                <p id="modalDate" class="modal-date-text"></p>
+                <div id="modalDescription" class="modal-desc-box"></div>
                 <div class="modal-footer admin-only">
                     <button id="editBtn" class="action-btn">แก้ไข</button>
-                    <button id="deleteBtn" class="action-btn delete-type">ลบ</button>
+                    <button id="deleteBtn" class="action-btn" style="color:red;">ลบ</button>
                 </div>
             </div>
             <div id="editMode" class="hidden">
                 <form id="eventForm" class="event-form">
-                    <div class="form-group">
-                        <label>วันที่</label>
-                        <input type="date" id="eventDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label>ชื่อกิจกรรม/วันหยุด</label>
-                        <input type="text" id="eventName" placeholder="เช่น วันขึ้นปีใหม่" required>
-                    </div>
+                    <div class="form-group"><label>วันที่</label><input type="date" id="eventDate" required></div>
+                    <div class="form-group"><label>ชื่อกิจกรรม</label><input type="text" id="eventName" required></div>
                     <div class="form-group">
                         <label>ประเภท</label>
                         <select id="eventType">
                             <option value="public">วันหยุดราชการ</option>
-                            <option value="buddhist">วันพระ / วันสำคัญศาสนา</option>
+                            <option value="buddhist">วันพระ / วันสำคัญ</option>
                             <option value="exam">วันกิจกรรม / สอบ</option>
                             <option value="compensation">วันทำงานชดเชย</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label>รายละเอียดเพิ่มเติม</label>
-                        <textarea id="eventDescription" rows="3"></textarea>
-                    </div>
+                    <div class="form-group"><label>รายละเอียด</label><textarea id="eventDescription"
+                            rows="3"></textarea></div>
                     <div class="form-actions">
                         <button type="submit" class="save-btn">บันทึก</button>
                         <button type="button" id="cancelEdit" class="cancel-btn">ยกเลิก</button>
@@ -183,7 +1066,6 @@
         </div>
     </div>
 
-    <!-- Auth Modal -->
     <div id="authModal" class="modal hidden">
         <div class="glass-card auth-card">
             <div class="modal-header">
@@ -194,43 +1076,256 @@
                 <button id="loginTab" class="auth-tab active">เข้าสู่ระบบ</button>
                 <button id="registerTab" class="auth-tab">ลงทะเบียน</button>
             </div>
-
-            <form id="loginForm" class="event-form auth-form">
-                <div class="form-group">
-                    <label>ชื่อผู้ใช้งาน (Username)</label>
-                    <input type="text" id="loginUser" required>
-                </div>
-                <div class="form-group">
-                    <label>รหัสผ่าน (Password)</label>
-                    <input type="password" id="loginPass" required>
-                </div>
+            <form id="loginForm" class="event-form">
+                <div class="form-group"><label>Username</label><input type="text" id="loginUser" required></div>
+                <div class="form-group"><label>Password</label><input type="password" id="loginPass" required></div>
                 <button type="submit" class="save-btn">เข้าสู่ระบบ</button>
             </form>
-
-            <form id="registerForm" class="event-form auth-form hidden">
-                <div class="form-group">
-                    <label>ชื่อเจ้าหน้าที่ (Full Name)</label>
-                    <input type="text" id="regName" required>
-                </div>
-                <div class="form-group">
-                    <label>ชื่อผู้ใช้งาน (Username)</label>
-                    <input type="text" id="regUser" required>
-                </div>
-                <div class="form-group">
-                    <label>รหัสผ่าน (Password)</label>
-                    <input type="password" id="regPass" required>
-                </div>
-                <div class="form-group">
-                    <label>รหัสลับเชิญ (Invite Code)</label>
-                    <input type="password" id="regInvite" placeholder="สำหรับเจ้าหน้าที่เท่านั้น" required>
-                </div>
-                <button type="submit" class="save-btn highlight">ลงทะเบียน</button>
+            <form id="registerForm" class="event-form hidden">
+                <div class="form-group"><label>ชื่อจริง</label><input type="text" id="regName" required></div>
+                <div class="form-group"><label>Username</label><input type="text" id="regUser" required></div>
+                <div class="form-group"><label>Password</label><input type="password" id="regPass" required></div>
+                <div class="form-group"><label>Invite Code</label><input type="password" id="regInvite" required></div>
+                <button type="submit" class="save-btn">ลงทะเบียน</button>
             </form>
         </div>
     </div>
 
-    <script src="src/holidays.js"></script>
-    <script src="src/script.js"></script>
+    <script>
+        const holidaysData = {
+            2026: [
+                { date: "2026-01-01", name: "วันขึ้นปีใหม่", type: "public" },
+                { date: "2026-01-02", name: "วันหยุดพิเศษ", type: "public" },
+                { date: "2026-03-03", name: "วันมาฆบูชา", type: "public" },
+                { date: "2026-04-06", name: "วันจักรี", type: "public" },
+                { date: "2026-04-12", name: "วันประสูติฯ กรมพระยาวชิรญาณวโรรส / วันทำบุญประจำปี", type: "exam" },
+                { date: "2026-04-13", name: "วันสงกรานต์", type: "public" },
+                { date: "2026-04-14", name: "วันสงกรานต์", type: "public" },
+                { date: "2026-04-15", name: "วันสงกรานต์", type: "public" },
+                { date: "2026-05-01", name: "วันแรงงานแห่งชาติ", type: "public" },
+                { date: "2026-05-02", name: "ชดเชยวันพระ (๑ พฤษภาคม)", type: "compensation" },
+                { date: "2026-05-04", name: "วันฉัตรมงคล", type: "public" },
+                { date: "2026-05-13", name: "วันพืชมงคล", type: "public" },
+                { date: "2026-05-31", name: "วันวิสาขบูชา", type: "public" },
+                { date: "2026-06-01", name: "ชดเชยวันวิสาขบูชา", type: "compensation" },
+                { date: "2026-06-03", name: "วันเฉลิมฯ พระราชินีสุทิดา", type: "public" },
+                { date: "2026-07-28", name: "วันเฉลิมฯ รัชกาลที่ 10", type: "public" },
+                { date: "2026-07-29", name: "วันอาสาฬหบูชา", type: "public" },
+                { date: "2026-07-30", name: "วันเข้าพรรษา", type: "public" },
+                { date: "2026-12-05", name: "วันพ่อแห่งชาติ", type: "public" },
+                { date: "2026-12-07", name: "ชดเชยวันพ่อแห่งชาติ", type: "public" },
+                { date: "2026-12-10", name: "วันรัฐธรรมนูญ", type: "public" },
+                { date: "2026-12-31", name: "วันสิ้นปี", type: "public" }
+            ]
+        };
+
+        const wanPhraData = {
+            2026: ["2026-01-03", "2026-01-11", "2026-01-18", "2026-01-26", "2026-02-02", "2026-02-10", "2026-02-16", "2026-02-24", "2026-03-03", "2026-03-11", "2026-03-18", "2026-03-26", "2026-04-02", "2026-04-10", "2026-04-16", "2026-04-24", "2026-05-01", "2026-05-09", "2026-05-16", "2026-05-24", "2026-05-31", "2026-06-08", "2026-06-14", "2026-06-22", "2026-06-29", "2026-07-07", "2026-07-14", "2026-07-22", "2026-07-29", "2026-07-30", "2026-08-06", "2026-08-13", "2026-08-21", "2026-08-28", "2026-09-05", "2026-09-11", "2026-09-19", "2026-09-26", "2026-10-04", "2026-10-11", "2026-10-19", "2026-10-26", "2026-11-03", "2026-11-09", "2026-11-17", "2026-11-24", "2026-12-02", "2026-12-09", "2026-12-17", "2026-12-24"]
+        };
+
+        const patimokkhaData = {
+            2026: ['2026-01-03', '2026-01-18', '2026-02-02', '2026-03-03', '2026-03-18', '2026-04-02', '2026-05-01', '2026-05-16', '2026-06-29', '2026-07-14', '2026-07-29', '2026-08-13', '2026-08-28', '2026-10-11', '2026-10-26', '2026-12-09', '2026-12-24']
+        };
+
+        const prakatData = { 2026: ['2026-02-16', '2026-04-16', '2026-06-14', '2026-09-11', '2026-11-09'] };
+    </script>
+
+    <script>
+        let currentYear = new Date().getFullYear();
+        if (currentYear < 2026) currentYear = 2026;
+        let currentMonth = new Date().getMonth();
+        let summaryYearDisplay = currentYear;
+
+        const calendarGrid = document.getElementById('calendarGrid');
+        const monthDisplay = document.getElementById('monthDisplay');
+        const yearDisplay = document.getElementById('yearDisplay');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const todayBtn = document.getElementById('todayBtn');
+        const holidayList = document.getElementById('holidayList');
+        const modal = document.getElementById('eventModal');
+        const viewMode = document.getElementById('viewMode');
+        const editMode = document.getElementById('editMode');
+        const eventForm = document.getElementById('eventForm');
+        const summaryBtn = document.getElementById('summaryBtn');
+        const summarySection = document.getElementById('summarySection');
+        const authModal = document.getElementById('authModal');
+        const loginBtn = document.getElementById('loginBtn');
+
+        let customHolidays = JSON.parse(localStorage.getItem('customHolidays')) || [];
+        let users = JSON.parse(localStorage.getItem('calendarUsers')) || [{ user: 'admin', pass: 'admin', name: 'Admin' }];
+        const INVITE_CODE = "MekongDhamma2026";
+        const monthNamesTH = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+
+        function init() {
+            const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+            if (currentUser) setAdminMode(true, currentUser.name);
+
+            renderCalendar();
+
+            prevBtn.onclick = () => { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(); };
+            nextBtn.onclick = () => { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar(); };
+            todayBtn.onclick = () => { const today = new Date(); currentYear = today.getFullYear(); currentMonth = today.getMonth(); renderCalendar(); };
+
+            document.getElementById('closeModal').onclick = () => modal.classList.add('hidden');
+            document.getElementById('cancelEdit').onclick = () => { editMode.classList.add('hidden'); viewMode.classList.remove('hidden'); };
+
+            loginBtn.onclick = () => { if (document.body.classList.contains('admin-mode')) { if (confirm('ออกจากระบบ?')) setAdminMode(false); } else { authModal.classList.remove('hidden'); } };
+            document.getElementById('closeAuth').onclick = () => authModal.classList.add('hidden');
+
+            document.getElementById('loginTab').onclick = () => { document.getElementById('loginForm').classList.remove('hidden'); document.getElementById('registerForm').classList.add('hidden'); };
+            document.getElementById('registerTab').onclick = () => { document.getElementById('registerForm').classList.remove('hidden'); document.getElementById('loginForm').classList.add('hidden'); };
+
+            document.getElementById('loginForm').onsubmit = (e) => {
+                e.preventDefault();
+                const u = document.getElementById('loginUser').value;
+                const p = document.getElementById('loginPass').value;
+                const found = users.find(x => x.user === u && x.pass === p);
+                if (found) { setAdminMode(true, found.name); sessionStorage.setItem('currentUser', JSON.stringify(found)); authModal.classList.add('hidden'); }
+                else alert('Login Failed');
+            };
+
+            document.getElementById('registerForm').onsubmit = (e) => {
+                e.preventDefault();
+                if (document.getElementById('regInvite').value !== INVITE_CODE) return alert('Invalid Invite Code');
+                users.push({ user: document.getElementById('regUser').value, pass: document.getElementById('regPass').value, name: document.getElementById('regName').value });
+                localStorage.setItem('calendarUsers', JSON.stringify(users));
+                alert('Success'); document.getElementById('loginTab').click();
+            };
+
+            eventForm.onsubmit = (e) => {
+                e.preventDefault();
+                const ev = { date: document.getElementById('eventDate').value, name: document.getElementById('eventName').value, type: document.getElementById('eventType').value, description: document.getElementById('eventDescription').value };
+                if (currentEditingId !== null) customHolidays[currentEditingId] = ev; else customHolidays.push(ev);
+                localStorage.setItem('customHolidays', JSON.stringify(customHolidays));
+                modal.classList.add('hidden'); renderCalendar();
+            };
+
+            summaryBtn.onclick = () => { summaryYearDisplay = currentYear; showSummary(); };
+            document.getElementById('closeSummary').onclick = () => summarySection.classList.add('hidden');
+            document.getElementById('summaryPrevYear').onclick = () => { summaryYearDisplay--; showSummary(); };
+            document.getElementById('summaryNextYear').onclick = () => { summaryYearDisplay++; showSummary(); };
+            document.getElementById('exportBtn').onclick = exportCSV;
+            document.getElementById('addEventBtn').onclick = () => openEdit(null);
+
+            document.querySelectorAll('.s-tab').forEach(t => t.onclick = () => {
+                document.querySelectorAll('.s-tab').forEach(x => x.classList.remove('active'));
+                document.querySelectorAll('.summary-pane').forEach(x => x.classList.remove('active'));
+                t.classList.add('active'); document.getElementById(t.dataset.target).classList.add('active');
+            });
+        }
+
+        function setAdminMode(isAdmin, name = "") {
+            if (isAdmin) { document.body.classList.add('admin-mode'); loginBtn.textContent = `Logout (${name})`; }
+            else { document.body.classList.remove('admin-mode'); loginBtn.textContent = 'Login'; sessionStorage.removeItem('currentUser'); }
+            renderCalendar();
+        }
+
+        async function exportCSV() {
+            const evs = await getEvents(currentYear);
+            const filtered = Object.values(evs).filter(x => x.type === 'public' || x.type === 'compensation').sort((a, b) => a.date.localeCompare(b.date));
+            let csv = "\ufeffDate,Name,Type\n";
+            filtered.forEach(x => csv += `${x.date},${x.name.replace(/,/g, ' ')},${x.type}\n`);
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob); link.download = `Calendar_${currentYear}.csv`; link.click();
+        }
+
+        async function getEvents(year) {
+            const all = {};
+            (holidaysData[year] || []).forEach(h => all[h.date] = { ...h });
+            customHolidays.forEach(h => { if (h.date.startsWith(year)) all[h.date] = { ...h }; });
+            (wanPhraData[year] || []).forEach(d => {
+                let s = ""; if (patimokkhaData[year]?.includes(d)) s = " (ปถ)"; else if (prakatData[year]?.includes(d)) s = " (ปข)";
+                if (all[d]) { if (!all[d].name.includes("วันพระ")) all[d].name += "/วันพระ" + s; }
+                else all[d] = { date: d, name: "วันพระ" + s, type: 'buddhist' };
+            });
+            return all;
+        }
+
+        async function renderCalendar() {
+            const evs = await getEvents(currentYear);
+            const start = new Date(currentYear, currentMonth, 1).getDay();
+            const days = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const t = new Date(); const ts = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
+
+            monthDisplay.textContent = monthNamesTH[currentMonth];
+            yearDisplay.textContent = currentYear + 543;
+            calendarGrid.innerHTML = '';
+            const list = [];
+
+            for (let i = 0; i < start; i++) calendarGrid.appendChild(Object.assign(document.createElement('div'), { className: 'day empty' }));
+            for (let d = 1; d <= days; d++) {
+                const ds = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                const el = document.createElement('div'); el.className = 'day';
+                const dow = new Date(currentYear, currentMonth, d).getDay();
+                if (dow === 0) el.classList.add('sunday'); if (dow === 6) el.classList.add('saturday');
+                if (ds === ts) el.classList.add('today');
+
+                el.innerHTML = `<span class="day-number">${d}</span>`;
+                const ev = evs[ds];
+                if (ev) {
+                    el.classList.add(ev.type === 'public' ? 'holiday' : ev.type);
+                    el.innerHTML += `<div class="event-name">${ev.name}</div>`;
+                    el.onclick = () => openView(ds, ev);
+                    list.push({ day: d, ...ev });
+                } else {
+                    el.onclick = () => { if (document.body.classList.contains('admin-mode')) openEdit({ date: ds, name: '', type: 'public' }); };
+                }
+                calendarGrid.appendChild(el);
+            }
+            renderList(list);
+        }
+
+        function renderList(evs) {
+            holidayList.innerHTML = evs.length ? '' : '<p style="text-align:center; color:#64748b;">ไม่มีกิจกรรมในเดือนนี้</p>';
+            evs.sort((a, b) => a.day - b.day).forEach(ev => {
+                const item = document.createElement('div');
+                const ty = ev.type === 'public' ? 'holiday' : ev.type;
+                item.className = `holiday-item border-${ty}`;
+                item.innerHTML = `<div class="holiday-date-badge date-${ty}">${ev.day}</div><div class="holiday-info"><strong>${ev.name}</strong></div>`;
+                item.onclick = () => openView(`${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(ev.day).padStart(2, '0')}`, ev);
+                holidayList.appendChild(item);
+            });
+        }
+
+        function openView(ds, ev) {
+            document.getElementById('modalTitle').textContent = ev.name;
+            const [y, m, d] = ds.split('-');
+            document.getElementById('modalDate').textContent = `${parseInt(d)} ${monthNamesTH[m - 1]} ${parseInt(y) + 543}`;
+            document.getElementById('modalDescription').textContent = ev.description || "";
+            viewMode.classList.remove('hidden'); editMode.classList.add('hidden'); modal.classList.remove('hidden');
+            document.getElementById('editBtn').onclick = () => openEdit(ev);
+            document.getElementById('deleteBtn').onclick = () => { if (confirm('ลบ?')) { customHolidays = customHolidays.filter(x => !(x.date === ev.date && x.name === ev.name)); localStorage.setItem('customHolidays', JSON.stringify(customHolidays)); modal.classList.add('hidden'); renderCalendar(); } };
+        }
+
+        let currentEditingId = null;
+        function openEdit(ev) {
+            currentEditingId = ev ? customHolidays.findIndex(x => x.date === ev.date && x.name === ev.name) : null;
+            if (ev) { document.getElementById('eventDate').value = ev.date; document.getElementById('eventName').value = ev.name; document.getElementById('eventType').value = ev.type; document.getElementById('eventDescription').value = ev.description || ""; }
+            else { eventForm.reset(); document.getElementById('eventDate').value = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-01`; }
+            viewMode.classList.add('hidden'); editMode.classList.remove('hidden'); modal.classList.remove('hidden');
+        }
+
+        async function showSummary() {
+            document.getElementById('summaryYear').textContent = summaryYearDisplay + 543;
+            const evs = await getEvents(summaryYearDisplay);
+            const lists = { public: document.getElementById('publicHolidaySummary'), compensation: document.getElementById('compHolidaySummary'), other: document.getElementById('otherHolidaySummary') };
+            Object.values(lists).forEach(l => l.innerHTML = '');
+
+            Object.keys(evs).sort((a, b) => new Date(a) - new Date(b)).forEach(ds => {
+                const ev = evs[ds]; const [y, m, d] = ds.split('-').map(Number);
+                const ty = ev.type === 'public' ? 'public' : (ev.type === 'compensation' ? 'compensation' : 'other');
+                const item = document.createElement('li');
+                item.innerHTML = `<strong>${ev.name}</strong><span>${d} ${monthNamesTH[m - 1]}</span>`;
+                item.onclick = () => { summarySection.classList.add('hidden'); currentYear = y; currentMonth = m - 1; renderCalendar(); openView(ds, ev); };
+                lists[ty].appendChild(item);
+            });
+            summarySection.classList.remove('hidden');
+        }
+
+        init();
+    </script>
 </body>
 
 </html>
