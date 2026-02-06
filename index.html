@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ปฏิทินประจำปี 2569 - สำนักงานแม่กองธรรมสนามหลวง</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="src/style.css">
+</head>
+
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <main class="glass-container fade-in">
+        <header class="app-header">
+            <div class="logo-area">
+                <div class="logo-circle">
+                    <!-- SVG Logo Container -->
+                    <svg viewBox="0 0 100 100" width="100" height="100">
+                        <circle cx="50" cy="50" r="45" fill="#1e3a8a" />
+                        <path d="M30 70 L50 30 L70 70 Z" fill="white" />
+                        <circle cx="50" cy="45" r="8" fill="#fbbf24" />
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h1>ปฏิทินประจำปี ๒๕๖๙</h1>
+                    <p>สำนักงานแม่กองธรรมสนามหลวง</p>
+                </div>
+            </div>
+            <div class="nav-controls-area">
+                <nav class="calendar-nav">
+                    <button id="prevBtn" class="nav-btn" title="เดือนก่อนหน้า">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+                    <div class="date-context">
+                        <span id="monthDisplay"></span>
+                        <span id="yearDisplay"></span>
+                    </div>
+                    <button id="nextBtn" class="nav-btn" title="เดือนถัดไป">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+                </nav>
+                <div class="quick-actions">
+                    <button id="todayBtn" class="action-btn-outline">วันนี้</button>
+                    <button id="summaryBtn" class="action-btn-outline highlight">สรุปปีนี้</button>
+                    <button id="exportBtn" class="action-btn-outline admin-only"
+                        title="ส่งออกข้อมูลสำหรับเครื่องสแกนหน้า">ส่งออกข้อมูล (CSV)</button>
+                    <button id="loginBtn" class="action-btn-outline">เข้าสู่ระบบเจ้าหน้าที่</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Summary Section (Initially Hidden) -->
+        <section id="summarySection" class="summary-section hidden">
+            <div class="summary-card glass-container">
+                <div class="section-header">
+                    <div class="title-with-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2.5">
+                            <path
+                                d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z" />
+                        </svg>
+                        <div class="summary-title-wrapper">
+                            <h3>สรุปกิจกรรมประจำปี</h3>
+                            <div class="summary-year-nav">
+                                <button id="summaryPrevYear" class="year-nav-btn">&larr;</button>
+                                <span id="summaryYear"></span>
+                                <button id="summaryNextYear" class="year-nav-btn">&rarr;</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="closeSummary" class="close-icon">&times;</button>
+                </div>
+
+                <div class="summary-layout">
+                    <div class="summary-tabs">
+                        <button class="s-tab active" data-target="public-group">วันหยุดราชการ</button>
+                        <button class="s-tab" data-target="comp-group">วันทำงานชดเชย</button>
+                        <button class="s-tab" data-target="other-group">กิจกรรมอื่น ๆ</button>
+                    </div>
+
+                    <div id="summaryContent" class="summary-content">
+                        <div class="summary-pane active" id="public-group">
+                            <ul id="publicHolidaySummary"></ul>
+                        </div>
+                        <div class="summary-pane" id="comp-group">
+                            <ul id="compHolidaySummary"></ul>
+                        </div>
+                        <div class="summary-pane" id="other-group">
+                            <ul id="otherHolidaySummary"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="calendar-card">
+            <div class="weekdays-grid">
+                <div class="sun">อาทิตย์</div>
+                <div class="mon">จันทร์</div>
+                <div class="tue">อังคาร</div>
+                <div class="wed">พุธ</div>
+                <div class="thu">พฤหัสบดี</div>
+                <div class="fri">ศุกร์</div>
+                <div class="sat">เสาร์</div>
+            </div>
+            <div id="calendarGrid" class="calendar-grid"></div>
+
+            <div class="legend-area">
+                <div class="legend-item"><span class="dot holiday"></span> วันหยุดราชการ</div>
+                <div class="legend-item"><span class="dot buddhist"></span> วันพระ / วันสำคัญ</div>
+                <div class="legend-item"><span class="dot exam"></span> วันกิจกรรม / สอบ</div>
+                <div class="legend-item"><span class="dot compensation"></span> วันชดเชย</div>
+                <div class="legend-item"><span class="dot today"></span> วันนี้</div>
+            </div>
+        </section>
+
+        <section class="events-section">
+            <div class="section-header">
+                <h3>รายการกิจกรรมเดือนนี้</h3>
+                <button id="addEventBtn" class="add-btn admin-only">+ เพิ่มกิจกรรม</button>
+            </div>
+            <div id="holidayList" class="holiday-list"></div>
+        </section>
+    </main>
+
+    <!-- Modal for details/Editing -->
+    <div id="eventModal" class="modal hidden">
+        <div class="glass-card">
+            <div class="modal-header">
+                <h3 id="modalTitle">รายละเอียด</h3>
+                <span class="close-btn" id="closeModal">&times;</span>
+            </div>
+            <div id="viewMode">
+                <div class="modal-body">
+                    <p id="modalDate" class="modal-date-text"></p>
+                    <div id="modalDescription" class="modal-desc-box"></div>
+                </div>
+                <div class="modal-footer admin-only">
+                    <button id="editBtn" class="action-btn">แก้ไข</button>
+                    <button id="deleteBtn" class="action-btn delete-type">ลบ</button>
+                </div>
+            </div>
+            <div id="editMode" class="hidden">
+                <form id="eventForm" class="event-form">
+                    <div class="form-group">
+                        <label>วันที่</label>
+                        <input type="date" id="eventDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>ชื่อกิจกรรม/วันหยุด</label>
+                        <input type="text" id="eventName" placeholder="เช่น วันขึ้นปีใหม่" required>
+                    </div>
+                    <div class="form-group">
+                        <label>ประเภท</label>
+                        <select id="eventType">
+                            <option value="public">วันหยุดราชการ</option>
+                            <option value="buddhist">วันพระ / วันสำคัญศาสนา</option>
+                            <option value="exam">วันกิจกรรม / สอบ</option>
+                            <option value="compensation">วันทำงานชดเชย</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>รายละเอียดเพิ่มเติม</label>
+                        <textarea id="eventDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="save-btn">บันทึก</button>
+                        <button type="button" id="cancelEdit" class="cancel-btn">ยกเลิก</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="modal hidden">
+        <div class="glass-card auth-card">
+            <div class="modal-header">
+                <h3 id="authTitle">เข้าสู่ระบบเจ้าหน้าที่</h3>
+                <span class="close-btn" id="closeAuth">&times;</span>
+            </div>
+            <div class="auth-tabs">
+                <button id="loginTab" class="auth-tab active">เข้าสู่ระบบ</button>
+                <button id="registerTab" class="auth-tab">ลงทะเบียน</button>
+            </div>
+
+            <form id="loginForm" class="event-form auth-form">
+                <div class="form-group">
+                    <label>ชื่อผู้ใช้งาน (Username)</label>
+                    <input type="text" id="loginUser" required>
+                </div>
+                <div class="form-group">
+                    <label>รหัสผ่าน (Password)</label>
+                    <input type="password" id="loginPass" required>
+                </div>
+                <button type="submit" class="save-btn">เข้าสู่ระบบ</button>
+            </form>
+
+            <form id="registerForm" class="event-form auth-form hidden">
+                <div class="form-group">
+                    <label>ชื่อเจ้าหน้าที่ (Full Name)</label>
+                    <input type="text" id="regName" required>
+                </div>
+                <div class="form-group">
+                    <label>ชื่อผู้ใช้งาน (Username)</label>
+                    <input type="text" id="regUser" required>
+                </div>
+                <div class="form-group">
+                    <label>รหัสผ่าน (Password)</label>
+                    <input type="password" id="regPass" required>
+                </div>
+                <div class="form-group">
+                    <label>รหัสลับเชิญ (Invite Code)</label>
+                    <input type="password" id="regInvite" placeholder="สำหรับเจ้าหน้าที่เท่านั้น" required>
+                </div>
+                <button type="submit" class="save-btn highlight">ลงทะเบียน</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="src/holidays.js"></script>
+    <script src="src/script.js"></script>
+</body>
+
+</html>
